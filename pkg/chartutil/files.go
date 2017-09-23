@@ -20,8 +20,8 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"path"
-	"strings"
 	"reflect"
+	"strings"
 
 	"github.com/ghodss/yaml"
 
@@ -236,6 +236,10 @@ func FromJson(str string) map[string]interface{} {
 	return m
 }
 
+// GlobalDefault retrieves a "global" if it exists, otherwise returns a local
+// value, and nil if key is not present.
+//
+// This is designed to be called from a template when using complex subcharts.
 func GlobalDefault(key string, data map[string]interface{}) interface{} {
 	if val, ok := data["global"]; ok {
 		k := reflect.ValueOf(val)
