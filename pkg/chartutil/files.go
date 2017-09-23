@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"path"
 	"strings"
+	"reflect"
 
 	"github.com/ghodss/yaml"
 
@@ -233,4 +234,21 @@ func FromJson(str string) map[string]interface{} {
 		m["Error"] = err.Error()
 	}
 	return m
+}
+
+func GlobalDefault(key string, data map[string]interface{}) interface{} {
+	if val, ok := data["global"]; ok {
+		k := reflect.ValueOf(val)
+		switch k.Kind() {
+		case reflect.Map:
+			rval := k.MapIndex(reflect.ValueOf(key))
+			if rval.IsValid() {
+				return rval.Interface()
+			}
+		}
+	}
+	if val, ok := data[key]; ok {
+		return val
+	}
+	return nil
 }
