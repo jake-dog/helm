@@ -217,9 +217,8 @@ func TestFromJson(t *testing.T) {
 }
 
 func TestGlobalDefault(t *testing.T) {
-	expect := "global foo"
 	dict := map[string]interface{}{
-		"foo": "bar",
+		"foo":  "bar",
 		"bing": 22,
 		"global": map[string]interface{}{
 			"bing": "bang",
@@ -239,8 +238,8 @@ func TestGlobalDefault(t *testing.T) {
 
 	// We should test the case where global is empty
 	dict = map[string]interface{}{
-		"foo": "bar",
-		"global": map[string]interface{},
+		"foo":    "bar",
+		"global": make(map[string]interface{}),
 	}
 	if GlobalDefault("foo", dict).(string) != "bar" {
 		t.Errorf("Expected foo=bar")
@@ -253,7 +252,7 @@ func TestGlobalDefault(t *testing.T) {
 	if GlobalDefault("foo", dict).(string) != "bar" {
 		t.Errorf("Expected foo=bar")
 	}
-	if GlobalDefault("foo", dict) != "bar" { //nil check?
-		t.Errorf("Expected foo=bar")
+	if GlobalDefault("bar", dict) != nil {
+		t.Errorf("Expected bar=nil")
 	}
 }
