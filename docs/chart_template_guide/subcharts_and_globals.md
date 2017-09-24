@@ -105,6 +105,17 @@ Sometimes, though, you do want certain values to be available to all of the temp
 
 Global values are values that can be accessed from any chart or subchart by exactly the same name. Globals require explicit declaration. You can't use an existing non-global as if it were a global.
 
+Subcharts may use the provided globaldefault function which returns a global value if present, and a non-global value otherwise.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  salad: {{ globalDefault "salad" $ }}
+```
+
 The Values data type has a reserved section called `Values.global` where global values can be set. Let's set one in our `mychart/values.yaml` file.
 
 ```yaml

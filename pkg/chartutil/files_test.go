@@ -215,3 +215,44 @@ func TestFromJson(t *testing.T) {
 		t.Fatal("Expected parser error")
 	}
 }
+
+func TestGlobalDefault(t *testing.T) {
+	dict := map[string]interface{}{
+		"foo":  "bar",
+		"bing": 22,
+		"global": map[string]interface{}{
+			"bing": "bang",
+			"ping": "pong",
+		},
+	}
+
+	if GlobalDefault("foo", dict).(string) != "bar" {
+		t.Errorf("Expected foo=bar")
+	}
+	if GlobalDefault("bing", dict).(string) != "bang" {
+		t.Errorf("Expected bing=bang")
+	}
+	if GlobalDefault("ping", dict).(string) != "pong" {
+		t.Errorf("Expected ping=pong")
+	}
+
+	// We should test the case where global is empty
+	dict = map[string]interface{}{
+		"foo":    "bar",
+		"global": make(map[string]interface{}),
+	}
+	if GlobalDefault("foo", dict).(string) != "bar" {
+		t.Errorf("Expected foo=bar")
+	}
+
+	// And test where no global key is provided
+	dict = map[string]interface{}{
+		"foo": "bar",
+	}
+	if GlobalDefault("foo", dict).(string) != "bar" {
+		t.Errorf("Expected foo=bar")
+	}
+	if GlobalDefault("bar", dict) != nil {
+		t.Errorf("Expected bar=nil")
+	}
+}
